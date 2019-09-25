@@ -1,3 +1,6 @@
 node_modules
 .vscode
 .DS_Store
+
+## API key
+react-client/env/config.js

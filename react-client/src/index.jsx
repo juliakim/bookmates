@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import List from './components/List.jsx';
+import Finder from './components/Finder.jsx';
 import 'antd/dist/antd.css';
 import { PageHeader, Menu, Icon, Layout, Typography } from 'antd';
 
@@ -62,9 +62,7 @@ class App extends React.Component {
                   <Title level={2}>Wishlist</Title>
                 </div>
               ) : (
-                <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-                  <Title level={2}>Search</Title>
-                </div>
+                <Finder />
               )}
           </Content>
           <Footer>Bookmates</Footer>

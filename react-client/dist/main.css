@@ -3,3 +3,9 @@
   z-index: 1;
   width: 100%;
 }
+
+.container {
+  background: '#fff';
+  padding: 24px;
+  min-height: 280px;
+}

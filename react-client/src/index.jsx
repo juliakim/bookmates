@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import 'antd/dist/antd.css';
-import { PageHeader, Menu, Icon } from 'antd';
+import { PageHeader, Menu, Icon, Layout, Typography } from 'antd';
+
+const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
 class App extends React.Component {
   constructor(props) {
@@ -50,6 +53,22 @@ class App extends React.Component {
             Find Books
           </Menu.Item>
         </Menu>
+        <Layout>
+          <Content style={{ padding: '50px 50px 0 50px' }}>
+              {this.state.current === 'home' ? (
+                <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                  <Title level={2}>Bookshelf</Title>
+                  <Title level={2}>Favorites</Title>
+                  <Title level={2}>Wishlist</Title>
+                </div>
+              ) : (
+                <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                  <Title level={2}>Search</Title>
+                </div>
+              )}
+          </Content>
+          <Footer>Bookmates</Footer>
+        </Layout>
       </div>
     );
   }

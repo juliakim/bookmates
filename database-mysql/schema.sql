@@ -1,16 +1,37 @@
-DROP DATABASE IF EXISTS test;
+DROP DATABASE IF EXISTS bookmates;
 
-CREATE DATABASE test;
+CREATE DATABASE bookmates;
 
-USE test;
+USE bookmates;
 
-CREATE TABLE items (
-  id int NOT NULL AUTO_INCREMENT,
-  quantity integer NOT NULL,
-  description varchar(50) NOT NULL,
+CREATE TABLE books (
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  author VARCHAR(50) NOT NULL,
   PRIMARY KEY (ID)
 );
 
+CREATE TABLE favorites (
+  id INT NOT NULL AUTO_INCREMENT,
+  book_id INT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE current (
+  id INT NOT NULL AUTO_INCREMENT,
+  book_id INT,
+  PRIMARY KEY(id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE wishlist (
+  id INT NOT NULL AUTO_INCREMENT,
+  book_id INT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
 /*  Execute this file from the command line by typing:
- *    mysql -u root < server/schema.sql
+ *    mysql -u root -p < database-mysql/schema.sql
  *  to create the database and the tables.*/

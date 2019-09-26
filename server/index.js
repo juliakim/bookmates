@@ -20,7 +20,7 @@ app.get('/books', function (req, res) {
 });
 
 app.post('/books', (req, res) => {
-  items.addToFavorites(req, res, (err, data) => {
+  items.addToBookshelf(req, res, (err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {

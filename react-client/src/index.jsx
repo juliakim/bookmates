@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Finder from './components/Finder.jsx';
+import Bookshelf from './components/Bookshelf.jsx';
 import 'antd/dist/antd.css';
 import { PageHeader, Menu, Icon, Layout, Typography } from 'antd';
+import axios from 'axios';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -13,23 +15,31 @@ class App extends React.Component {
     super(props);
     this.state = {
       current: 'home',
-      items: []
+      bookshelf: []
     }
+    this.getBookshelf = this.getBookshelf.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
-    $.ajax({
-      url: '/items',
-      success: (data) => {
-        this.setState({
-          items: data
-        })
-      },
-      error: (err) => {
-        console.log('err', err);
-      }
-    });
+    // $.ajax({
+    //   url: '/items',
+    //   success: (data) => {
+    //     this.setState({
+    //       items: data
+    //     })
+    //   },
+    //   error: (err) => {
+    //     console.log('err', err);
+    //   }
+    // });
+    this.getBookshelf();
+  }
+
+  getBookshelf() {
+    axios.get('/books')
+      .then(({ data }) => this.setState({bookshelf: data}))
+      .catch(error => console.log(error));
   }
 
   handleClick(e) {
@@ -58,6 +68,7 @@ class App extends React.Component {
               {this.state.current === 'home' ? (
                 <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
                   <Title level={2}>Bookshelf</Title>
+                    <Bookshelf bookshelf={this.state.bookshelf}/>
                   <Title level={2}>Favorites</Title>
                   <Title level={2}>Wishlist</Title>
                 </div>

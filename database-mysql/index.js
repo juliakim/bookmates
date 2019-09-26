@@ -11,7 +11,7 @@ const escapeApostrophes = (string) => {
   return string.split('\'').join('\'\'');
 }
 
-const addToFavorites = (req, res, callback) => {
+const addToBookshelf = (req, res, callback) => {
   const { title, authors, publishedDate, description, pageCount, imageLinks, previewLink, ISBN13 } = req.body;
 
   // Search by title and author if ISBN13 is unavailable
@@ -58,4 +58,4 @@ const selectAll = function(callback) {
   });
 };
 
-module.exports = { addToFavorites, selectAll };
+module.exports = { addToBookshelf, selectAll };

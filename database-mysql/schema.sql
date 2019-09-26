@@ -7,7 +7,12 @@ USE bookmates;
 CREATE TABLE books (
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(100) NOT NULL,
-  author VARCHAR(50) NOT NULL,
+  authors VARCHAR(100) NOT NULL,
+  publishedDate SMALLINT NOT NULL,
+  description TEXT NOT NULL,
+  pageCount SMALLINT NOT NULL,
+  imageLinks VARCHAR(200),
+  previewLink VARCHAR(200),
   PRIMARY KEY (ID)
 );
 

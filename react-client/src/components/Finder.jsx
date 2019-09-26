@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, List, Select, Typography, Avatar, Icon } from 'antd';
+import { Button, Input, List, Select, Typography, Avatar, Icon } from 'antd';
 import apiKey from '../../env/config.js';
 import axios from 'axios';
 
@@ -65,7 +65,7 @@ const select = (
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 8 }} />
-    {text}
+    {'Add to favorites'}
   </span>
 );
 
@@ -77,7 +77,12 @@ class Finder extends Component {
       searchQuery: '',
       searchResults: []
     };
+    this.favoriteBook = this.favoriteBook.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+  }
+
+  favoriteBook(e) {
+
   }
 
   handleSearch(value) {
@@ -105,9 +110,11 @@ class Finder extends Component {
             <List.Item
               key={book.id}
               actions={[
-                <IconText type="star-o" text="156" key="list-vertical-star-o" />,
-                <IconText type="like-o" text="156" key="list-vertical-like-o" />,
-                <IconText type="message" text="2" key="list-vertical-message" />,
+                <Button type="link" onClick={this.favoriteBook}>
+                  <IconText type="star-o" key="list-vertical-star-o"/>
+                </Button>
+                // <IconText type="like-o" text="156" key="list-vertical-like-o" />,
+                // <IconText type="message" text="2" key="list-vertical-message" />,
               ]}
               extra={
                 <img

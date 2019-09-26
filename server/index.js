@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/books', function (req, res) {
-  items.selectAll(function(err, data) {
+  items.selectAllFromBookshelf(function(err, data) {
     if(err) {
       res.sendStatus(500);
     } else {
@@ -32,6 +32,16 @@ app.post('/books', (req, res) => {
     }
   })
 });
+
+app.delete('/books', (req, res) => {
+  items.removeFromBookshelf(req, res, (err, data) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.send('Removed book from bookshelf');
+    }
+  })
+})
 
 app.listen(3000, function() {
   console.log('listening on port 3000!');

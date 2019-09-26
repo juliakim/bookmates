@@ -45,7 +45,7 @@ const parseResults = (array) => {
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 8 }} />
-    {'Add to bookshelf'}
+    {'Remove from bookshelf'}
   </span>
 );
 
@@ -60,8 +60,8 @@ const Bookshelf = (props) => {
         <List.Item
           key={book.id}
           actions={[
-            <Button type="link">
-              <IconText type="star-o" key="list-vertical-star-o"/>
+            <Button type="link" onClick={() => props.removeFromBookshelf(book)}>
+              <IconText type="delete" key="list-vertical-delete"/>
             </Button>
             // <IconText type="like-o" text="156" key="list-vertical-like-o" />,
             // <IconText type="message" text="2" key="list-vertical-message" />,

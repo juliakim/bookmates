@@ -137,7 +137,7 @@ class Finder extends Component {
             <List.Item
               key={book.id}
               actions={[
-                <Button type="link" onClick={(e) => this.addToBookshelf(book)}>
+                <Button type="link" onClick={() => this.addToBookshelf(book)}>
                   <IconText type="plus" key="list-vertical-plus"/>
                 </Button>
                 // <IconText type="star-o" key="list-vertical-star-o"/>

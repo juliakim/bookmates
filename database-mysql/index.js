@@ -36,20 +36,20 @@ const addToBookshelf = (req, res, callback) => {
           } else {
             callback(null, results);
           }
-        })
+        });
       } else {
         callback(null, []);
       }
     }
-  })
+  });
 
   // Ensure book is not already in favorites
   // const queryString = `SELECT `
   // connection.query('')
 }
 
-const selectAll = function(callback) {
-  connection.query('SELECT * FROM books', function(err, results, fields) {
+const selectAllFromBookshelf = (callback) => {
+  connection.query('SELECT * FROM books ORDER BY id DESC', function(err, results, fields) {
     if(err) {
       callback(err, null);
     } else {
@@ -58,4 +58,14 @@ const selectAll = function(callback) {
   });
 };
 
-module.exports = { addToBookshelf, selectAll };
+const removeFromBookshelf = (req, res, callback) => {
+  connection.query(`DELETE FROM books WHERE id = ${req.body.id}`, (err, results) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, results);
+    }
+  })
+}
+
+module.exports = { addToBookshelf, selectAllFromBookshelf, removeFromBookshelf };

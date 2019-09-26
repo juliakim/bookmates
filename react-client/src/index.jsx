@@ -62,7 +62,7 @@ class App extends React.Component {
                   <Title level={2}>Wishlist</Title>
                 </div>
               ) : (
-                <Finder />
+                <Finder current={this.state.current}/>
               )}
           </Content>
           <Footer>Bookmates</Footer>

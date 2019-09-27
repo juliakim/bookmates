@@ -77,7 +77,7 @@ app.delete('/favorites', (req, res) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      res.send('Removed book from favorites');
+      res.end();
     }
   });
 })

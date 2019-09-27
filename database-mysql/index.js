@@ -83,7 +83,7 @@ const addToFavorites = (req, res, callback) => {
           if (err) {
             callback(err, null);
           } else {
-            if (results.length === 0) {
+            if (results.length === 1) {
               connection.query(`INSERT INTO favorites (book_id) VALUES (${results[0].id})`, (err, results) => {
                 if (err) {
                   callback(err, null);
@@ -99,76 +99,6 @@ const addToFavorites = (req, res, callback) => {
       }
     }
   });
-
-  /*
-  // Search by title and author if ISBN13 is unavailable
-  let checkBooksQuery;
-  if (!ISBN13) {
-    checkBooksQuery = `SELECT * FROM books WHERE title = '${escapeApostrophes(title)}' AND authors = '${authors}'`;
-  } else {
-    checkBooksQuery = `SELECT * FROM books WHERE isbn = ${ISBN13}`;
-  }
-
-  // Ensure book is not already in table of books
-  connection.query(checkBooksQuery, (err, results) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      // Add book to table if there are no matching rows
-      if (results.length === 0) {
-        const addBookQuery = `INSERT INTO books (title, authors, publishedDate, description, pageCount, imageLinks, previewLink, isbn) VALUES ('${escapeApostrophes(title)}', '${authors}', '${publishedDate}', '${escapeApostrophes(description)}', ${pageCount}, '${imageLinks}', '${previewLink}', '${ISBN13}')`;
-        connection.query(addBookQuery, (err, results) => {
-          if (err) {
-            callback(err, null);
-          } else {
-            // Add book to favorites if there are no matching rows
-            const findBookId = `SELECT id FROM books WHERE title = '${title}' AND authors = '${authors}'`;
-            connection.query(findBookId, (err, results) => {
-              if (err) {
-                callback(err, null);
-              } else {
-                // Add book to favorites if there are no matching rows
-                if (results.length === 0) {
-                  const addFavoriteQuery = `INSERT INTO favorites (book_id) VALUES (${results.id})`
-                  console.log(addFavoriteQuery);
-                  connection.query(addFavoriteQuery, (err, results) => {
-                    if (err) {
-                      callback(err, null);
-                    } else {
-                      callback(null, results);
-                    }
-                  });
-                }
-              }
-            });
-          }
-        });
-        // Book already in bookshelf
-      } else {
-        const findBookId = `SELECT id FROM books WHERE title = '${title}' AND authors = '${authors}'`;
-        connection.query(findBookId, (err, results) => {
-          if (err) {
-            callback(err, null);
-          } else {
-            // Add book to favorites if there are no matching rows
-            if (results.length === 0) {
-              const addFavoriteQuery = `INSERT INTO favorites (book_id) VALUES (${results.id})`
-              console.log(addFavoriteQuery);
-              connection.query(addFavoriteQuery, (err, results) => {
-                if (err) {
-                  callback(err, null);
-                } else {
-                  callback(null, results);
-                }
-              });
-            }
-          }
-        });
-        callback(null, []);
-      }
-    }
-  });
-  */
 }
 
 const selectAllFromBookshelf = (callback) => {
@@ -182,25 +112,7 @@ const selectAllFromBookshelf = (callback) => {
 };
 
 const selectAllFromFavorites = (callback) => {
-  // connection.query(`SELECT book_id FROM favorites`, (err, results) => {
-  //   if (err) {
-  //     callback(err, null);
-  //   } else {
-  //     const bookIds = [];
-  //     results.forEach(result => bookIds.push(result.book_id));
-  //     connection.query('SELECT * FROM books WHERE id IN (bookIds.join(',')) ORDER BY id DESC', function(err, results, fields) {
-  //       if (err) {
-  //         console.log(err);
-  //         console.log(bookIds.join(','));
-  //         callback(err, null);
-  //       } else {
-  //         console.log('success', results);
-  //         callback(null, results);
-  //       }
-  //     });
-  //   }
-  // })
-  connection.query(`SELECT books.* FROM books JOIN favorites ON books.id = favorites.book_id ORDER BY id DESC`, (err, results) => {
+  connection.query(`SELECT books.* FROM books JOIN favorites ON books.id = favorites.book_id ORDER BY favorites.id DESC`, (err, results) => {
     if (err) {
       callback(err, null);
     } else {

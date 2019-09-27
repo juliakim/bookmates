@@ -62,9 +62,14 @@ const Bookshelf = (props) => {
           <List.Item
             key={book.id}
             actions={[
-              <Button type="link" onClick={() => props.removeFromBookshelf(book)}>
-                <IconText type="delete" text={'Remove from bookshelf'} key="list-vertical-delete"/>
-              </Button>
+              <div>
+                <Button type="link" onClick={() => props.addToFavorites(book)}>
+                  <IconText type="star-o" text={'Add to favorites'} key="list-vertical-star-o"/>
+                </Button>
+                <Button type="link" onClick={() => props.removeFromBookshelf(book)}>
+                  <IconText type="delete" text={'Remove from bookshelf'} key="list-vertical-delete"/>
+                </Button>
+              </div>
               // <IconText type="like-o" text="156" key="list-vertical-like-o" />,
               // <IconText type="message" text="2" key="list-vertical-message" />,
             ]}

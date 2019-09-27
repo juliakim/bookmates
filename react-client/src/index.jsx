@@ -20,6 +20,7 @@ class App extends React.Component {
     }
     this.getBookshelf = this.getBookshelf.bind(this);
     this.getFavorites = this.getFavorites.bind(this);
+    this.addToFavorites = this.addToFavorites.bind(this);
     this.removeFromBookshelf = this.removeFromBookshelf.bind(this);
     this.removeFromFavorites = this.removeFromFavorites.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -42,6 +43,24 @@ class App extends React.Component {
       .catch(error => console.log(error));
   }
 
+  addToFavorites(e) {
+    let { title, authors, publishedDate, description, pageCount, categories, imageLinks, previewLink, isbn } = e;
+    axios.post('/favorites', {
+      title: title,
+      authors: authors,
+      publishedDate: publishedDate,
+      description: description,
+      pageCount: pageCount,
+      imageLinks: imageLinks,
+      previewLink: previewLink,
+      ISBN13: isbn
+    })
+      .then(() => {
+        this.getFavorites();
+      })
+      .catch(error => 'Could not add book to favorites'); // add alertt
+  }
+
   removeFromBookshelf(e) {
     axios.delete('/books', {
       data: {
@@ -62,8 +81,8 @@ class App extends React.Component {
       }
     })
       .then(() => {
-        this.getFavorites();
         this.getBookshelf();
+        this.getFavorites();
       })
       .catch(error => console.log(error));
   }
@@ -77,7 +96,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <PageHeader title="Bookmates" subTitle="A platform to connect with other readers" />
+        <PageHeader title="Bookmates" subTitle="Connect with other readers" />
         <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
           <Menu.Item key="home">
             <Icon type="home" />
@@ -91,12 +110,17 @@ class App extends React.Component {
             <Icon type="search" />
             Find Books
           </Menu.Item>
+          <Menu.Item key="discuss">
+            <Icon type="read" />
+            Discuss
+          </Menu.Item>
         </Menu>
         <Layout>
           <Content style={{ padding: '50px 50px 0 50px' }}>
-            {this.state.current === 'home' && <Bookshelf bookshelf={this.state.bookshelf} removeFromBookshelf={this.removeFromBookshelf} />}
+            {this.state.current === 'home' && <Bookshelf bookshelf={this.state.bookshelf} addToFavorites={this.addToFavorites} removeFromBookshelf={this.removeFromBookshelf} />}
             {this.state.current === 'favorites' && <Favorites favorites={this.state.favorites} removeFromFavorites={this.removeFromFavorites} />}
             {this.state.current === 'search' && <Finder current={this.state.current} updateBookshelf={this.getBookshelf} updateFavorites={this.getFavorites} />}
+            {this.state.current === 'discuss' && <div>Coming Soon</div>}
           </Content>
           <Footer>Bookmates</Footer>
         </Layout>

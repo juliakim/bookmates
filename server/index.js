@@ -19,6 +19,16 @@ app.get('/books', function (req, res) {
   });
 });
 
+app.get('/favorites', function (req, res) {
+  items.selectAllFromFavorites(function(err, data) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.json(data);
+    }
+  });
+});
+
 app.post('/books', (req, res) => {
   items.addToBookshelf(req, res, (err, data) => {
     if (err) {
@@ -33,14 +43,43 @@ app.post('/books', (req, res) => {
   })
 });
 
-app.delete('/books', (req, res) => {
-  items.removeFromBookshelf(req, res, (err, data) => {
+app.post('/favorites', (req, res) => {
+  items.addToFavorites(req, res, (err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      res.send('Removed book from bookshelf');
+      if (data.length === 0) {
+        res.end('Book is already a part of favorites');
+      } else {
+        res.end('Successfully added book to favorites');
+      }
     }
   })
+});
+
+app.delete('/books', (req, res) => {
+  items.removeFromFavorites(req, res, (err) => {
+    if (err) {
+      res.sendStatus(500);
+    }
+    items.removeFromBookshelf(req, res, (err, data) => {
+      if (err) {
+        res.sendStatus(500);
+      } else {
+        res.end();
+      }
+    });
+  });
+})
+
+app.delete('/favorites', (req, res) => {
+  items.removeFromFavorites(req, res, (err) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.send('Removed book from favorites');
+    }
+  });
 })
 
 app.listen(3000, function() {

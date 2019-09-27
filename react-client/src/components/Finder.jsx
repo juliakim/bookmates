@@ -77,7 +77,7 @@ const select = (
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 8 }} />
-    {'Add to bookshelf'}
+    {text}
   </span>
 );
 
@@ -108,7 +108,29 @@ class Finder extends Component {
       previewLink: previewLink,
       ISBN13: ISBN13
     })
-      .then(response => console.log(response))
+      .then(() => this.props.updateBookshelf())
+      .catch(error => 'Could not add book to bookshelf'); // add alertt
+  }
+
+  addToFavorites(e) {
+    let { title, authors, publishedDate, description, pageCount, categories, imageLinks, previewLink } = e.volumeInfo
+    authors = authors.join(', ');
+    imageLinks = imageLinks.smallThumbnail;
+    const ISBN13 = getISBN13(e.volumeInfo.industryIdentifiers);
+    axios.post('/favorites', {
+      title: title,
+      authors: authors,
+      publishedDate: publishedDate,
+      description: description,
+      pageCount: pageCount,
+      imageLinks: imageLinks,
+      previewLink: previewLink,
+      ISBN13: ISBN13
+    })
+      .then(response => {
+        this.props.updateFavorites();
+        this.props.updateBookshelf();
+      })
       .catch(error => 'Could not add book to favorites'); // add alertt
   }
 
@@ -125,7 +147,7 @@ class Finder extends Component {
 
   render() {
     return (
-      <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+      <div style={{ background: '#fff', padding: 24, minHeight: 1180 }}>
         <Title level={2}>Search</Title>
         <Search addonBefore={select} placeholder="Find book" onSearch={this.handleSearch} enterButton/>
         <List
@@ -137,10 +159,14 @@ class Finder extends Component {
             <List.Item
               key={book.id}
               actions={[
-                <Button type="link" onClick={() => this.addToBookshelf(book)}>
-                  <IconText type="plus" key="list-vertical-plus"/>
-                </Button>
-                // <IconText type="star-o" key="list-vertical-star-o"/>
+                <div>
+                  <Button type="link" onClick={() => this.addToBookshelf(book)}>
+                    <IconText type="plus" text={'Add to bookshelf'} key="list-vertical-plus"/>
+                  </Button>
+                  <Button type="link" onClick={() => this.addToFavorites(book)}>
+                    <IconText type="star-o" text={'Add to favorites'} key="list-vertical-star-o"/>
+                  </Button>
+                </div>
                 // <IconText type="like-o" text="156" key="list-vertical-like-o" />,
                 // <IconText type="message" text="2" key="list-vertical-message" />,
               ]}

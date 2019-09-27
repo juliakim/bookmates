@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Finder from './components/Finder.jsx';
 import Bookshelf from './components/Bookshelf.jsx';
+import Favorites from './components/Favorites.jsx';
 import 'antd/dist/antd.css';
 import { PageHeader, Menu, Icon, Layout, Typography } from 'antd';
 import axios from 'axios';
@@ -14,24 +15,30 @@ class App extends React.Component {
     super(props);
     this.state = {
       current: 'home',
-      bookshelf: []
+      bookshelf: [],
+      favorites: []
     }
     this.getBookshelf = this.getBookshelf.bind(this);
+    this.getFavorites = this.getFavorites.bind(this);
     this.removeFromBookshelf = this.removeFromBookshelf.bind(this);
+    this.removeFromFavorites = this.removeFromFavorites.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
     this.getBookshelf();
-  }
-
-  componentDidUpdate() {
-    this.getBookshelf();
+    this.getFavorites();
   }
 
   getBookshelf() {
     axios.get('/books')
       .then(({ data }) => this.setState({bookshelf: data}))
+      .catch(error => console.log(error));
+  }
+
+  getFavorites() {
+    axios.get('/favorites')
+      .then(({ data }) => this.setState({favorites: data}))
       .catch(error => console.log(error));
   }
 
@@ -41,12 +48,27 @@ class App extends React.Component {
         id: e.id
       }
     })
-      .then(({data}) => console.log(data))
+      .then(() => {
+        this.getBookshelf();
+        this.getFavorites();
+      })
+      .catch(error => console.log(error));
+  }
+
+  removeFromFavorites(e) {
+    axios.delete('/favorites', {
+      data: {
+        id: e.id
+      }
+    })
+      .then(() => {
+        this.getFavorites();
+        this.getBookshelf();
+      })
       .catch(error => console.log(error));
   }
 
   handleClick(e) {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
@@ -61,6 +83,10 @@ class App extends React.Component {
             <Icon type="home" />
             Home
           </Menu.Item>
+          <Menu.Item key="favorites">
+            <Icon type="star" />
+            Favorites
+          </Menu.Item>
           <Menu.Item key="search">
             <Icon type="search" />
             Find Books
@@ -68,16 +94,9 @@ class App extends React.Component {
         </Menu>
         <Layout>
           <Content style={{ padding: '50px 50px 0 50px' }}>
-              {this.state.current === 'home' ? (
-                <div style={{ background: '#fff', padding: 24, minHeight: 400 }}>
-                  <Title level={2}>Bookshelf</Title>
-                    <Bookshelf bookshelf={this.state.bookshelf} removeFromBookshelf={this.removeFromBookshelf}/>
-                  <Title level={2}>Favorites</Title>
-                  <Title level={2}>Wishlist</Title>
-                </div>
-              ) : (
-                <Finder current={this.state.current}/>
-              )}
+            {this.state.current === 'home' && <Bookshelf bookshelf={this.state.bookshelf} removeFromBookshelf={this.removeFromBookshelf} />}
+            {this.state.current === 'favorites' && <Favorites favorites={this.state.favorites} removeFromFavorites={this.removeFromFavorites} />}
+            {this.state.current === 'search' && <Finder current={this.state.current} updateBookshelf={this.getBookshelf} updateFavorites={this.getFavorites} />}
           </Content>
           <Footer>Bookmates</Footer>
         </Layout>

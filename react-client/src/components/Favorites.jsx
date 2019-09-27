@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, List, Typography } from 'antd';
+import { Divider, Button, Icon, List, Typography } from 'antd';
 
 const { Title, Paragraph } = Typography;
 
@@ -53,6 +53,7 @@ const Favorites = (props) => {
   return (
     <div style={{ background: '#fff', padding: 24, minHeight: 400 }}>
       <Title level={2}>Favorites</Title>
+      <Divider />
       <List
         itemLayout="vertical"
         size="large"

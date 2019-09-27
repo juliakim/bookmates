@@ -76,14 +76,15 @@ const addToFavorites = (req, res, callback) => {
             callback(null, results);
           }
         });
-      // Check if book exists in favorites table
       } else {
-        // Add book to favorites table
-        connection.query(checkBooksQuery, (err, results) => {
+        // Check if book exists in favorites table
+        const checkFavoritesQuery = `SELECT * FROM books INNER JOIN favorites ON books.id = favorites.book_id WHERE books.title = '${escapeApostrophes(title)}' AND authors = '${authors}'`
+        connection.query(checkFavoritesQuery, (err, newResults) => {
           if (err) {
             callback(err, null);
           } else {
-            if (results.length === 1) {
+            // Add book to favorites table
+            if (newResults.length === 0) {
               connection.query(`INSERT INTO favorites (book_id) VALUES (${results[0].id})`, (err, results) => {
                 if (err) {
                   callback(err, null);
@@ -92,7 +93,7 @@ const addToFavorites = (req, res, callback) => {
                 }
               });
             } else {
-              callback(null, results);
+              callback(null, []);
             }
           }
         });

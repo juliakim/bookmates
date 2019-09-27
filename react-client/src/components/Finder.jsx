@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Input, List, Select, Typography, Avatar, Icon } from 'antd';
+import { Button, Divider, Input, List, Select, Typography, Avatar, Icon } from 'antd';
 import apiKey from '../../env/config.js';
 import axios from 'axios';
 
@@ -108,8 +108,16 @@ class Finder extends Component {
       previewLink: previewLink,
       ISBN13: ISBN13
     })
-      .then(() => this.props.updateBookshelf())
-      .catch(error => 'Could not add book to bookshelf'); // add alertt
+      .then(({ data }) => {
+        if (data === 'Successfully added book to bookshelf') {
+          this.props.showAlert('success', 'Successfully added to bookshelf!');
+        }
+        if (data === 'Book is already a part of bookcase') {
+          this.props.showAlert('info', 'Book is already on bookshelf!');
+        }
+        this.props.updateBookshelf()
+      })
+      .catch(() => this.props.showAlert('error', 'Could not add to bookshelf'));
   }
 
   addToFavorites(e) {
@@ -127,11 +135,17 @@ class Finder extends Component {
       previewLink: previewLink,
       ISBN13: ISBN13
     })
-      .then(response => {
+      .then(({ data }) => {
+        if (data === 'Successfully added book to favorites') {
+          this.props.showAlert('success', 'Successfully added to favorites!');
+        }
+        if (data === 'Book is already a part of favorites') {
+          this.props.showAlert('info', 'Book is already saved to favorites!');
+        }
         this.props.updateFavorites();
         this.props.updateBookshelf();
       })
-      .catch(error => 'Could not add book to favorites'); // add alertt
+      .catch(() => this.props.showAlert('error', 'Could not add to bookshelf')); // add alertt
   }
 
   handleSearch(value) {
@@ -149,6 +163,7 @@ class Finder extends Component {
     return (
       <div style={{ background: '#fff', padding: 24, minHeight: 1180 }}>
         <Title level={2}>Search</Title>
+        <Divider />
         <Search addonBefore={select} placeholder="Find book" onSearch={this.handleSearch} enterButton/>
         <List
           itemLayout="vertical"
